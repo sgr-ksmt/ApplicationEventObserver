@@ -74,7 +74,7 @@ public struct ApplicationEvent {
         NSNotification.Name.UIApplicationDidChangeStatusBarFrame:        UIApplicationStatusBarFrameUserInfoKey
     ]
     
-    public init?(notification: Notification) {
+    public init?(notification: Foundation.Notification) {
         guard let type = ApplicationEventType(notificationName: notification.name) else {
             return nil
         }
