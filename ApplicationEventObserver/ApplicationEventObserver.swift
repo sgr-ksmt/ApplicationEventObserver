@@ -25,18 +25,18 @@ public enum ApplicationEventType {
     case backgroundRefreshStatusDidChange
     
     fileprivate static let eventTypes: [NSNotification.Name: ApplicationEventType] = [
-        NSNotification.Name.UIApplicationDidFinishLaunching:               .didFinishLaunching,
-        NSNotification.Name.UIApplicationWillEnterForeground:              .willEnterForeground,
-        NSNotification.Name.UIApplicationDidEnterBackground:               .didEnterBackground,
-        NSNotification.Name.UIApplicationWillResignActive:                 .willResignActive,
-        NSNotification.Name.UIApplicationDidBecomeActive:                  .didBecomeActive,
-        NSNotification.Name.UIApplicationDidReceiveMemoryWarning:          .didReceiveMemoryWarning,
-        NSNotification.Name.UIApplicationWillTerminate:                    .willTerminate,
-        NSNotification.Name.UIApplicationSignificantTimeChange:            .significantTimeChange,
-        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation:   .willChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation:    .didChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame:         .willChangeStatusBarFrame,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame:          .didChangeStatusBarFrame,
+        NSNotification.Name.UIApplicationDidFinishLaunching: .didFinishLaunching,
+        NSNotification.Name.UIApplicationWillEnterForeground: .willEnterForeground,
+        NSNotification.Name.UIApplicationDidEnterBackground: .didEnterBackground,
+        NSNotification.Name.UIApplicationWillResignActive: .willResignActive,
+        NSNotification.Name.UIApplicationDidBecomeActive: .didBecomeActive,
+        NSNotification.Name.UIApplicationDidReceiveMemoryWarning: .didReceiveMemoryWarning,
+        NSNotification.Name.UIApplicationWillTerminate: .willTerminate,
+        NSNotification.Name.UIApplicationSignificantTimeChange: .significantTimeChange,
+        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: .willChangeStatusBarOrientation,
+        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: .didChangeStatusBarOrientation,
+        NSNotification.Name.UIApplicationWillChangeStatusBarFrame: .willChangeStatusBarFrame,
+        NSNotification.Name.UIApplicationDidChangeStatusBarFrame: .didChangeStatusBarFrame,
         NSNotification.Name.UIApplicationBackgroundRefreshStatusDidChange: .backgroundRefreshStatusDidChange
     ]
     
@@ -101,7 +101,7 @@ public protocol ApplicationEventObserverProtocol {
 
 open class ApplicationEventObserver: ApplicationEventObserverProtocol {
     
-    fileprivate lazy var nc = NotificationCenter.default
+    fileprivate lazy var nc: NotificationCenter = NotificationCenter.default
     
     fileprivate var callBack: ApplicationEventBlock?
 
