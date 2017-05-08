@@ -16,11 +16,11 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         observer.subscribe() { event in
             switch event.type {
-            case .DidBecomeActive, .WillResignActive:
-                print(event.type.notificationName)
-            case .WillChangeStatusBarFrame:
+            case .didBecomeActive, .willResignActive:
+                print(event.type.notificationName?.rawValue)
+            case .willChangeStatusBarFrame:
                 if let v = event.value {
-                    print(event.type.notificationName)
+                    print(event.type.notificationName?.rawValue)
                     print(v)
                 }
             default: break
