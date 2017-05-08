@@ -137,7 +137,7 @@ open class ApplicationEventObserver: ApplicationEventObserverProtocol {
 }
 
 private extension ApplicationEventObserver {
-    @objc func notified(_ notification: Notification) {
+    @objc func notified(_ notification: Foundation.Notification) {
         if !enabled { return }
         guard let event = ApplicationEvent(notification: notification) else {
             return
