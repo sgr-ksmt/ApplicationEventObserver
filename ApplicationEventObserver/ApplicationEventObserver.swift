@@ -64,14 +64,14 @@ public enum ApplicationEventType {
 }
 
 public struct ApplicationEvent {
-    fileprivate(set) public var type: ApplicationEventType
-    fileprivate(set) public var value: Any?
+    public let type: ApplicationEventType
+    public let value: Any?
     
     fileprivate static let notificationValueKeys: [NSNotification.Name: String]  = [
         NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation:  UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame:       UIApplicationStatusBarFrameUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame:        UIApplicationStatusBarFrameUserInfoKey
+        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
+        NSNotification.Name.UIApplicationWillChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey,
+        NSNotification.Name.UIApplicationDidChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey
     ]
     
     public init?(notification: Foundation.Notification) {
@@ -81,10 +81,15 @@ public struct ApplicationEvent {
         
         self.type = type
         
-        if let
-            key = type(of: self).notificationValueKeys[notification.name],
+        if
+            let key = type(of: self).notificationValueKeys[notification.name],
             let value = notification.userInfo?[key] {
+
             self.value = value
+
+        } else {
+
+            self.value = nil
         }
     }
 }
