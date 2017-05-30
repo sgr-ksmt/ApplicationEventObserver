@@ -23,7 +23,7 @@ public enum ApplicationEventType {
     case willChangeStatusBarFrame
     case didChangeStatusBarFrame
     case backgroundRefreshStatusDidChange
-    
+
     fileprivate static let eventTypes: [NSNotification.Name: ApplicationEventType] = [
         NSNotification.Name.UIApplicationDidFinishLaunching: .didFinishLaunching,
         NSNotification.Name.UIApplicationWillEnterForeground: .willEnterForeground,
@@ -39,48 +39,48 @@ public enum ApplicationEventType {
         NSNotification.Name.UIApplicationDidChangeStatusBarFrame: .didChangeStatusBarFrame,
         NSNotification.Name.UIApplicationBackgroundRefreshStatusDidChange: .backgroundRefreshStatusDidChange
     ]
-    
+
     public var notificationName: NSNotification.Name? {
         return type(of: self).eventTypes
-            .flatMap{ $0.1 == self ? $0.0 : nil }
+            .flatMap { $0.1 == self ? $0.0 : nil }
             .first ?? nil
     }
-    
+
     public static var allEventTypes: [ApplicationEventType] {
         return eventTypes.values.map { $0 }
     }
-    
+
     public static var allNotificationNames: [NSNotification.Name] {
         return eventTypes.keys.map { $0 }
     }
-    
+
     public init?(notificationName name: NSNotification.Name) {
         guard let type = type(of: self).eventTypes[name] else {
             return nil
         }
         self = type
     }
-    
+
 }
 
 public struct ApplicationEvent {
     public let type: ApplicationEventType
     public let value: Any?
-    
+
     fileprivate static let notificationValueKeys: [NSNotification.Name: String]  = [
         NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
         NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
         NSNotification.Name.UIApplicationWillChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey,
         NSNotification.Name.UIApplicationDidChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey
     ]
-    
+
     public init?(notification: Foundation.Notification) {
         guard let type = ApplicationEventType(notificationName: notification.name) else {
             return nil
         }
-        
+
         self.type = type
-        
+
         if
             let key = type(of: self).notificationValueKeys[notification.name],
             let value = notification.userInfo?[key] {
@@ -105,9 +105,9 @@ public protocol ApplicationEventObserverProtocol {
 }
 
 open class ApplicationEventObserver: ApplicationEventObserverProtocol {
-    
+
     fileprivate lazy var nc: NotificationCenter = NotificationCenter.default
-    
+
     fileprivate var callBack: ApplicationEventBlock?
 
     fileprivate var enabled: Bool = false
@@ -116,26 +116,26 @@ open class ApplicationEventObserver: ApplicationEventObserverProtocol {
             nc.addObserver(self, selector: #selector(ApplicationEventObserver.notified(_:)), name: $0, object: nil)
         }
     }
-    
+
     deinit {
         dispose()
         nc.removeObserver(self)
     }
-    
+
     open func subscribe(_ callBack: @escaping ApplicationEventBlock) {
         self.callBack = callBack
         resume()
     }
-    
+
     open func dispose() {
         suspend()
         self.callBack = nil
     }
-    
+
     open func resume() {
         enabled = true
     }
-    
+
     open func suspend() {
         enabled = false
     }

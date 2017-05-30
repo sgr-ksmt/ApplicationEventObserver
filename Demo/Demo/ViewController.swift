@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        observer.subscribe() { event in
+        observer.subscribe { event in
             switch event.type {
             case .didBecomeActive, .willResignActive:
                 print(event.type.notificationName?.rawValue)
@@ -32,7 +32,4 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
-
