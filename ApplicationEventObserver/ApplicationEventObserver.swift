@@ -25,24 +25,24 @@ public enum ApplicationEventType {
     case backgroundRefreshStatusDidChange
 
     fileprivate static let eventTypes: [NSNotification.Name: ApplicationEventType] = [
-        NSNotification.Name.UIApplicationDidFinishLaunching: .didFinishLaunching,
-        NSNotification.Name.UIApplicationWillEnterForeground: .willEnterForeground,
-        NSNotification.Name.UIApplicationDidEnterBackground: .didEnterBackground,
-        NSNotification.Name.UIApplicationWillResignActive: .willResignActive,
-        NSNotification.Name.UIApplicationDidBecomeActive: .didBecomeActive,
-        NSNotification.Name.UIApplicationDidReceiveMemoryWarning: .didReceiveMemoryWarning,
-        NSNotification.Name.UIApplicationWillTerminate: .willTerminate,
-        NSNotification.Name.UIApplicationSignificantTimeChange: .significantTimeChange,
-        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: .willChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: .didChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame: .willChangeStatusBarFrame,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame: .didChangeStatusBarFrame,
-        NSNotification.Name.UIApplicationBackgroundRefreshStatusDidChange: .backgroundRefreshStatusDidChange
+        UIApplication.didFinishLaunchingNotification: .didFinishLaunching,
+        UIApplication.willEnterForegroundNotification: .willEnterForeground,
+        UIApplication.didEnterBackgroundNotification: .didEnterBackground,
+        UIApplication.willResignActiveNotification: .willResignActive,
+        UIApplication.didBecomeActiveNotification: .didBecomeActive,
+        UIApplication.didReceiveMemoryWarningNotification: .didReceiveMemoryWarning,
+        UIApplication.willTerminateNotification: .willTerminate,
+        UIApplication.significantTimeChangeNotification: .significantTimeChange,
+        UIApplication.willChangeStatusBarOrientationNotification: .willChangeStatusBarOrientation,
+        UIApplication.didChangeStatusBarOrientationNotification: .didChangeStatusBarOrientation,
+        UIApplication.willChangeStatusBarFrameNotification: .willChangeStatusBarFrame,
+        UIApplication.didChangeStatusBarFrameNotification: .didChangeStatusBarFrame,
+        UIApplication.backgroundRefreshStatusDidChangeNotification: .backgroundRefreshStatusDidChange
     ]
 
     public var notificationName: NSNotification.Name? {
         return type(of: self).eventTypes
-            .flatMap { $0.1 == self ? $0.0 : nil }
+            .compactMap { $0.1 == self ? $0.0 : nil }
             .first ?? nil
     }
 
@@ -68,10 +68,10 @@ public struct ApplicationEvent {
     public let value: Any?
 
     fileprivate static let notificationValueKeys: [NSNotification.Name: String]  = [
-        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame: UIApplicationStatusBarFrameUserInfoKey
+        UIApplication.willChangeStatusBarOrientationNotification: UIApplication.statusBarOrientationUserInfoKey,
+        UIApplication.didChangeStatusBarOrientationNotification: UIApplication.statusBarOrientationUserInfoKey,
+        UIApplication.willChangeStatusBarFrameNotification: UIApplication.statusBarFrameUserInfoKey,
+        UIApplication.didChangeStatusBarFrameNotification: UIApplication.statusBarFrameUserInfoKey
     ]
 
     public init?(notification: Foundation.Notification) {
@@ -82,7 +82,7 @@ public struct ApplicationEvent {
         self.type = type
 
         if
-            let key = type(of: self).notificationValueKeys[notification.name],
+            let key = Swift.type(of: self).notificationValueKeys[notification.name],
             let value = notification.userInfo?[key] {
 
             self.value = value
