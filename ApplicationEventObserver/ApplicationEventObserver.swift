@@ -23,68 +23,73 @@ public enum ApplicationEventType {
     case willChangeStatusBarFrame
     case didChangeStatusBarFrame
     case backgroundRefreshStatusDidChange
-    
+
     fileprivate static let eventTypes: [NSNotification.Name: ApplicationEventType] = [
-        NSNotification.Name.UIApplicationDidFinishLaunching: .didFinishLaunching,
-        NSNotification.Name.UIApplicationWillEnterForeground: .willEnterForeground,
-        NSNotification.Name.UIApplicationDidEnterBackground: .didEnterBackground,
-        NSNotification.Name.UIApplicationWillResignActive: .willResignActive,
-        NSNotification.Name.UIApplicationDidBecomeActive: .didBecomeActive,
-        NSNotification.Name.UIApplicationDidReceiveMemoryWarning: .didReceiveMemoryWarning,
-        NSNotification.Name.UIApplicationWillTerminate: .willTerminate,
-        NSNotification.Name.UIApplicationSignificantTimeChange: .significantTimeChange,
-        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: .willChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation: .didChangeStatusBarOrientation,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame: .willChangeStatusBarFrame,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame: .didChangeStatusBarFrame,
-        NSNotification.Name.UIApplicationBackgroundRefreshStatusDidChange: .backgroundRefreshStatusDidChange
+        UIApplication.didFinishLaunchingNotification: .didFinishLaunching,
+        UIApplication.willEnterForegroundNotification: .willEnterForeground,
+        UIApplication.didEnterBackgroundNotification: .didEnterBackground,
+        UIApplication.willResignActiveNotification: .willResignActive,
+        UIApplication.didBecomeActiveNotification: .didBecomeActive,
+        UIApplication.didReceiveMemoryWarningNotification: .didReceiveMemoryWarning,
+        UIApplication.willTerminateNotification: .willTerminate,
+        UIApplication.significantTimeChangeNotification: .significantTimeChange,
+        UIApplication.willChangeStatusBarOrientationNotification: .willChangeStatusBarOrientation,
+        UIApplication.didChangeStatusBarOrientationNotification: .didChangeStatusBarOrientation,
+        UIApplication.willChangeStatusBarFrameNotification: .willChangeStatusBarFrame,
+        UIApplication.didChangeStatusBarFrameNotification: .didChangeStatusBarFrame,
+        UIApplication.backgroundRefreshStatusDidChangeNotification: .backgroundRefreshStatusDidChange
     ]
-    
+
     public var notificationName: NSNotification.Name? {
         return type(of: self).eventTypes
-            .flatMap{ $0.1 == self ? $0.0 : nil }
+            .compactMap { $0.1 == self ? $0.0 : nil }
             .first ?? nil
     }
-    
+
     public static var allEventTypes: [ApplicationEventType] {
         return eventTypes.values.map { $0 }
     }
-    
+
     public static var allNotificationNames: [NSNotification.Name] {
         return eventTypes.keys.map { $0 }
     }
-    
+
     public init?(notificationName name: NSNotification.Name) {
         guard let type = type(of: self).eventTypes[name] else {
             return nil
         }
         self = type
     }
-    
+
 }
 
 public struct ApplicationEvent {
-    fileprivate(set) public var type: ApplicationEventType
-    fileprivate(set) public var value: Any?
-    
+    public let type: ApplicationEventType
+    public let value: Any?
+
     fileprivate static let notificationValueKeys: [NSNotification.Name: String]  = [
-        NSNotification.Name.UIApplicationWillChangeStatusBarOrientation: UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarOrientation:  UIApplicationStatusBarOrientationUserInfoKey,
-        NSNotification.Name.UIApplicationWillChangeStatusBarFrame:       UIApplicationStatusBarFrameUserInfoKey,
-        NSNotification.Name.UIApplicationDidChangeStatusBarFrame:        UIApplicationStatusBarFrameUserInfoKey
+        UIApplication.willChangeStatusBarOrientationNotification: UIApplication.statusBarOrientationUserInfoKey,
+        UIApplication.didChangeStatusBarOrientationNotification: UIApplication.statusBarOrientationUserInfoKey,
+        UIApplication.willChangeStatusBarFrameNotification: UIApplication.statusBarFrameUserInfoKey,
+        UIApplication.didChangeStatusBarFrameNotification: UIApplication.statusBarFrameUserInfoKey
     ]
-    
+
     public init?(notification: Foundation.Notification) {
         guard let type = ApplicationEventType(notificationName: notification.name) else {
             return nil
         }
-        
+
         self.type = type
-        
-        if let
-            key = type(of: self).notificationValueKeys[notification.name],
+
+        if
+            let key = Swift.type(of: self).notificationValueKeys[notification.name],
             let value = notification.userInfo?[key] {
+
             self.value = value
+
+        } else {
+
+            self.value = nil
         }
     }
 }
@@ -100,9 +105,9 @@ public protocol ApplicationEventObserverProtocol {
 }
 
 open class ApplicationEventObserver: ApplicationEventObserverProtocol {
-    
+
     fileprivate lazy var nc: NotificationCenter = NotificationCenter.default
-    
+
     fileprivate var callBack: ApplicationEventBlock?
 
     fileprivate var enabled: Bool = false
@@ -111,26 +116,26 @@ open class ApplicationEventObserver: ApplicationEventObserverProtocol {
             nc.addObserver(self, selector: #selector(ApplicationEventObserver.notified(_:)), name: $0, object: nil)
         }
     }
-    
+
     deinit {
         dispose()
         nc.removeObserver(self)
     }
-    
+
     open func subscribe(_ callBack: @escaping ApplicationEventBlock) {
         self.callBack = callBack
         resume()
     }
-    
+
     open func dispose() {
         suspend()
         self.callBack = nil
     }
-    
+
     open func resume() {
         enabled = true
     }
-    
+
     open func suspend() {
         enabled = false
     }

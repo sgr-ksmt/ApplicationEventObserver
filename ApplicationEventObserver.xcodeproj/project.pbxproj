@@ -97,16 +97,17 @@
 				TargetAttributes = {
 					4DB0C55A1C302328000154F4 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0830;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = 4DB0C5551C302328000154F4 /* Build configuration list for PBXProject "ApplicationEventObserver" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 4DB0C5511C302328000154F4;
 			productRefGroup = 4DB0C55C1C302328000154F4 /* Products */;
@@ -244,7 +245,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -262,7 +263,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.sgrksmt.ApplicationEventObserver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
